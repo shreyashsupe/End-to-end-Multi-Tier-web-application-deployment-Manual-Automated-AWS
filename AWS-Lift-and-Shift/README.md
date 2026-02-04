@@ -42,18 +42,8 @@ The application follows a multi-tier architecture:
 - IAM – Access control and permissions
 - ACM – SSL/TLS certificates for HTTPS
 
-## Request Flow
-Users  
-  ↓  
-Route 53 (DNS)  
-  ↓  
-Application Load Balancer (HTTP / HTTPS)  
-  ↓  
-Tomcat EC2 Instances (Auto Scaling Group)  
-  ↓  
-Backend Services (MySQL, Memcache, RabbitMQ)
-
-Only Tomcat communicates with backend services.
+## Architecture Diagram 
+![Project Architecture](https://github.com/shreyashsupe/End-to-end-Multi-Tier-web-application-deployment-Manual-Automated-AWS/blob/main/AWS-Lift-and-Shift/Lift_%26_Shift_Architecture.png)
 
 ## Security Groups and Key Pairs
 ### Security Groups
