@@ -1,1 +1,151 @@
-## Guide to automate the procecss of setting up servers and services
+AUTOMATED MULTI-TIER APPLICATION SETUP GUIDE
+
+This guide explains how to set up and deploy the complete multi-tier web
+application using AUTOMATED PROVISIONING with Vagrant and shell scripts.
+
+In this approach, all manual steps are converted into automation so the
+entire environment can be created using a single command.
+
+--------------------------------------------------
+## ARCHITECTURE OVERVIEW
+
+
+Components deployed:
+
+1. Nginx        → Web Server & Reverse Proxy (web01)
+2. Tomcat       → Application Server (app01)
+3. MySQL        → Database Server (db01)
+4. Memcache     → Caching Layer (mc01)
+5. RabbitMQ     → Message Broker (rmq01)
+
+Each service runs on a separate Virtual Machine.
+Only Tomcat communicates with backend services.
+
+Traffic flow:
+Users → Nginx → Tomcat → Backend Services
+
+--------------------------------------------------
+## PREREQUISITES
+
+
+Ensure the following are installed on your local machine:
+
+1. Oracle VirtualBox
+2. Vagrant
+3. Vagrant Hostmanager plugin
+
+Install hostmanager plugin:
+    vagrant plugin install vagrant-hostmanager
+
+--------------------------------------------------
+## PROJECT STRUCTURE
+
+
+Automated Setup/
+│
+├── Vagrantfile
+├── Automated_setup_Guide.txt
+├── application.properties
+├── backend.sh
+├── mysql.sh
+├── memcache.sh
+├── rabbitmq.sh
+├── tomcat.sh
+├── tomcat_ubuntu.sh
+├── nginx.sh
+├── pom.xml
+└── src/
+
+Each shell script is responsible for configuring ONE service.
+
+--------------------------------------------------
+## AUTOMATED SETUP STEPS
+
+
+STEP 1: Navigate to Automated Setup directory
+
+    > cd Automated\ Setup
+
+STEP 2: Start the complete infrastructure
+
+    > vagrant up
+
+This single command will:
+
+- Create 5 virtual machines
+- Assign hostnames and private IPs
+- Update /etc/hosts automatically
+- Run service-specific shell scripts
+- Install and configure all services
+- Build and deploy the application
+
+--------------------------------------------------
+## WHAT HAPPENS INTERNALLY
+
+
+During `vagrant up`, the following automation occurs:
+
+1. db01
+   - Installs MySQL (MariaDB)
+   - Creates database and user
+   - Imports application schema
+   - Opens port 3306
+
+2. mc01
+   - Installs Memcache
+   - Configures remote access
+   - Opens port 11211
+
+3. rmq01
+   - Installs RabbitMQ
+   - Creates users and permissions
+   - Opens port 5672
+
+4. app01
+   - Installs Java & Tomcat
+   - Installs Maven
+   - Builds application WAR
+   - Deploys WAR to Tomcat
+   - Configures backend connectivity
+
+5. web01
+   - Installs Nginx
+   - Configures reverse proxy
+   - Forwards traffic to Tomcat
+
+--------------------------------------------------
+## ACCESSING THE APPLICATION
+
+
+Once provisioning is complete:
+
+- Open browser
+- Access the application using:
+
+    http://web01
+
+or the private IP of web01.
+
+--------------------------------------------------
+## STOPPING AND CLEANUP
+
+
+To stop all running VMs:
+
+    > vagrant halt
+
+To destroy the entire setup:
+
+    > vagrant destroy -f
+
+--------------------------------------------------
+## KEY LEARNING
+
+
+This automated setup demonstrates:
+
+- Infrastructure as Code principles
+- Automated provisioning using shell scripts
+- Service isolation and networking
+- Production-style deployment workflow
+- Transition from manual to automated DevOps practices
